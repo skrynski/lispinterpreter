@@ -48,7 +48,7 @@ namespace LispInterpreter.REPL
                     var func = Eval(pair.CAR, env);
                     var args = pair.CDR;
 
-                    var argsAsList = SExpressionPair.ToList(args);
+                    var argsAsList = args.ToList();
                     var evaluatedArgsAsList = argsAsList.Select(x => Eval(x, env)).ToList();
                     //var evaluatedArgs = SExpressionPair.List(evaluatedArgsAsList.ToArray());
                     return Apply(func, evaluatedArgsAsList);
@@ -62,7 +62,7 @@ namespace LispInterpreter.REPL
             throw new Exception("Eval: Invalid expression");
         }
 
-        private SExpression Apply(SExpression func, List<SExpression> evaluatedArgsAsList)
+        private SExpression Apply(SExpression func, IList<SExpression> evaluatedArgsAsList)
         {
             if (func is IPrimitive)
             {
@@ -79,7 +79,7 @@ namespace LispInterpreter.REPL
                 var body = func.At(2);
                 var closureEnv = (Environment) func.At(3);
 
-                var argsAsList = SExpressionPair.ToList(args);
+                var argsAsList = args.ToList();
 
                 var frameEnv = new Environment();
                 frameEnv.Parent = closureEnv;

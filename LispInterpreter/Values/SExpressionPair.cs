@@ -6,9 +6,9 @@ namespace LispInterpreter
 {
     public class SExpressionPair : SExpression
     {
-        public static SExpression  List(IList<SExpression> elements)
+        public static SExpression  List(IEnumerable<SExpression> elements)
         {
-            if (elements.Count == 0)
+            if (!elements.Any())
                 return SExpression.NIL;
 
             else
@@ -16,18 +16,7 @@ namespace LispInterpreter
 
         }
 
-        public static IList<SExpression> ToList(SExpression exp)
-        {
-            if (exp is SExpressionPair)
-            {
-                var pair = (SExpressionPair)exp;
-                 return new[] { pair.CAR}.Concat(ToList(pair.CDR)).ToList();
-            }
-
-            else
-                return new List<SExpression>();
-
-        }
+        
 
 
         public SExpression CAR { get; private set; }
@@ -59,5 +48,11 @@ namespace LispInterpreter
 
            
         }
+
+        public override IList<SExpression> ToList()
+        {
+            return new[] { CAR }.Concat(CDR.ToList()).ToList();
+        }
+
     }
 }

@@ -33,6 +33,12 @@ namespace LispInterpreter
 
         public virtual bool IsPair { get { return false; } }
 
+        public virtual IList<SExpression> ToList()
+        { 
+            return new List<SExpression>();
+
+        }
+
 
     }
 }
