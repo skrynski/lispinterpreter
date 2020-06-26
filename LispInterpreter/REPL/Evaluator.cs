@@ -50,7 +50,7 @@ namespace LispInterpreter.REPL
 
                     var argsAsList = args.ToList();
                     var evaluatedArgsAsList = argsAsList.Select(x => Eval(x, env)).ToList();
-                    //var evaluatedArgs = SExpressionPair.List(evaluatedArgsAsList.ToArray());
+                    
                     return Apply(func, evaluatedArgsAsList);
 
 

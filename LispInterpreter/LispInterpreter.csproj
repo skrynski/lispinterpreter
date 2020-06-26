@@ -8,5 +8,6 @@
   <ItemGroup>
     <Folder Include="Values\" />
     <Folder Include="REPL\" />
+    <Folder Include="Lexer\" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using LispInterpreter.Lexer;
 
 namespace LispInterpreter.REPL
 {
@@ -60,6 +61,21 @@ namespace LispInterpreter.REPL
 
         public void Start()
         {
+            var lexer = new Lexer.Lexer();
+            lexer.IgnoreRule = new LexerRule(@"\s", @"\s", "SPACE");
+            lexer.AddRule(new LexerRule(@"[(]", @"[(]", "OPEN_PARENS"));
+            lexer.AddRule(new LexerRule(@"[)]", @"[)]", "CLOSE_PARENS"));
+            lexer.AddRule(new LexerRule(@"[0-9]+", @"[0-9]", "NUMBER"));
+            lexer.AddRule(new LexerRule(@"[a-zA-Z][0-9a-zA-Z]+", @"[a-zA-Z]", "SYMBOL"));
+
+            //  @"[a-zA-Z_]+"
+            var str = "(( hola998 que tal 23 34  ))";
+            var tokens = lexer.Execute(str);
+
+
+
+            return;
+
 
             var globalEnvironment = new Environment();
             globalEnvironment.Define("CAR", CreateCAR());
