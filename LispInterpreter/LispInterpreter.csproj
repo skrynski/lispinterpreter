@@ -9,5 +9,6 @@
     <Folder Include="Values\" />
     <Folder Include="REPL\" />
     <Folder Include="Lexer\" />
+    <Folder Include="Parser\" />
   </ItemGroup>
 </Project>

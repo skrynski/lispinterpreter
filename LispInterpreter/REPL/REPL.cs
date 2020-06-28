@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using LispInterpreter.Lexer;
+using LispInterpreter.Parser;
 
 namespace LispInterpreter.REPL
 {
@@ -62,26 +63,35 @@ namespace LispInterpreter.REPL
         public void Start()
         {
             var lexer = new Lexer.Lexer();
-            lexer.IgnoreRule = new LexerRule(@"\s", @"\s", "SPACE");
-            lexer.AddRule(new LexerRule(@"[(]", @"[(]", "OPEN_PARENS"));
-            lexer.AddRule(new LexerRule(@"[)]", @"[)]", "CLOSE_PARENS"));
-            lexer.AddRule(new LexerRule(@"[0-9]+", @"[0-9]", "NUMBER"));
-            lexer.AddRule(new LexerRule(@"[a-zA-Z][0-9a-zA-Z]+", @"[a-zA-Z]", "SYMBOL"));
+            lexer.IgnoreRule = new LexerRule(@"\s", "SPACE");
+            lexer.AddRule(new LexerRule(@"[(]", "OPEN_PARENS"));
+            lexer.AddRule(new LexerRule(@"[)]", "CLOSE_PARENS"));
+            lexer.AddRule(new LexerRule(@"[0-9]+", "NUMBER"));
+            lexer.AddRule(new LexerRule(@"[a-zA-Z][0-9a-zA-Z]*", "SYMBOL"));
+            lexer.AddRule(new LexerRule("\"([^\"]*)\"", "STRING", c => c == '\"'));
 
-            //  @"[a-zA-Z_]+"
-            var str = "(( hola998 que tal 23 34  ))";
-            var tokens = lexer.Execute(str);
-
-
-
-            return;
+            //var str =  "(ADD 1 2)";
+           
+            
 
 
-            var globalEnvironment = new Environment();
+            //return;
+
+        
+            //var str = "    (   ( hola998 que   \t\n      tal 23 34  \"soy un string\" ))";
+            //var tokens = lexer.Execute(str);
+
+
+
+           
+
+
+            var globalEnvironment  = new Environment();
             globalEnvironment.Define("CAR", CreateCAR());
             globalEnvironment.Define("CDR", CreateCDR());
             globalEnvironment.Define("CONS", CreateCONS());
             globalEnvironment.Define("+", CreatePlus());
+            globalEnvironment.Define("ADD", CreatePlus());
 
 
             globalEnvironment.Define("x", new SExpressionSymbol("34"));
@@ -91,12 +101,18 @@ namespace LispInterpreter.REPL
 
             while (true)
             {
+                try {
+
                 var line = Console.ReadLine();
-                var parser = new SExpressionParser();
+
+                var tokens = lexer.Execute(line);
+
+                var parser = new LispParser();
+                var expression = parser.Parse(tokens);
+
+                //var parser = new SExpressionParser();
 
 
-                //try
-                ///{
                 //var expression = parser.Parse(line);
                 //var expression = new SExpressionString("hola");
                 // var expression = new SExpressionPair(
@@ -127,31 +143,31 @@ namespace LispInterpreter.REPL
 
                 //////////////
                 ///
-                var list23 = SExpressionPair.List(new[] {
+                //var list23 = SExpressionPair.List(new[] {
                        
-                        new SExpressionSymbol("2"),
-                        new SExpressionSymbol("3") });
+                //        new SExpressionSymbol("2"),
+                //        new SExpressionSymbol("3") });
 
-                globalEnvironment.Define("l", list23);
+                //globalEnvironment.Define("l", list23);
 
-                var expression = SExpressionPair.List(new[] {
-                        new SExpressionSymbol("CAR"),
-                        new SExpressionSymbol("l")
-                });
+                //var expression = SExpressionPair.List(new[] {
+                //        new SExpressionSymbol("CAR"),
+                //        new SExpressionSymbol("l")
+                //});
 
-
+                // ((LAMBDA (x) (ADD x 1)) 3)
 
 
                 var result = evaluator.Eval(expression, globalEnvironment);
-                    Console.WriteLine(result.ToString());
+                Console.WriteLine(result.ToString());
 
 
-                //}
-                //catch (Exception ex)
-                //{
-                //    throw;
-                //    //Console.WriteLine(ex.Message);
-                //}
+                }
+                catch (Exception ex)
+                {
+               
+                    Console.WriteLine(ex.Message);
+                }
 
             }
 
