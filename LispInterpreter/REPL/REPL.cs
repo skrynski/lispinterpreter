@@ -59,15 +59,14 @@ namespace LispInterpreter.REPL
             });
         }
 
-        //private SExpression CreateSetF()
-        //{
-        //    return new PluggablePrimitive((args, env) =>
-        //    {
-        //        env.Define(args[0].ToString(), args[1]);
-        //        return args[1];
-                
-        //    });
-        //}
+        private SExpression CreateList()
+        {
+            return new PluggablePrimitive((args, env) =>
+            {
+                return SExpressionPair.List(args);
+
+            });
+        }
 
 
         public void Start()
@@ -102,9 +101,11 @@ namespace LispInterpreter.REPL
             globalEnvironment.Define("CONS", CreateCONS());
             globalEnvironment.Define("+", CreatePlus());
             globalEnvironment.Define("ADD", CreatePlus());
-           
+            globalEnvironment.Define("LIST", CreateList());
 
-            globalEnvironment.Define("x", new SExpressionSymbol("34"));
+
+
+            //globalEnvironment.Define("x", new SExpressionSymbol("34"));
             
 
             var evaluator = new Evaluator();

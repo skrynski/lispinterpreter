@@ -24,6 +24,10 @@ namespace LispInterpreter.REPL
                 else
                     return env.Lookup(symbol.ToString());
             }
+            else if (expression is SExpressionNil)
+            {
+                return expression;
+            }
             else if (expression is SExpressionPair)
             {
                 var pair = (SExpressionPair)expression;
@@ -45,13 +49,13 @@ namespace LispInterpreter.REPL
                 }
                 else if (pair.CAR.ToString() == "SETF")
                 {
-                   
+
                     var args = pair.CDR;
 
                     var argsAsList = args.ToList();
                     var value = Eval(argsAsList[1], env);
 
-                    env.Define(((SExpressionSymbol) argsAsList[0]).ToString(), value);
+                    env.Define(((SExpressionSymbol)argsAsList[0]).ToString(), value);
 
                     return value;
 
@@ -64,7 +68,7 @@ namespace LispInterpreter.REPL
 
                     var argsAsList = args.ToList();
                     var evaluatedArgsAsList = argsAsList.Select(x => Eval(x, env)).ToList();
-                    
+
                     return Apply(func, evaluatedArgsAsList, env);
 
 
