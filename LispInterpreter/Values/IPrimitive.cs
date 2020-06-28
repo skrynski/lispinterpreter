@@ -4,6 +4,6 @@ namespace LispInterpreter
 {
     public interface IPrimitive
     {
-        SExpression Invoke(SExpression[] args);
+        SExpression Invoke(SExpression[] args, LispInterpreter.REPL.Environment env);
     }
 }

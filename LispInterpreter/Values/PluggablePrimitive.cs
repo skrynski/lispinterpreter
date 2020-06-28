@@ -3,16 +3,16 @@ namespace LispInterpreter
 {
     public class PluggablePrimitive : SExpression,  IPrimitive
     {
-        Func<SExpression[], SExpression> action;
+        Func<SExpression[], LispInterpreter.REPL.Environment, SExpression> action;
 
-        public PluggablePrimitive(Func<SExpression[], SExpression> f)
+        public PluggablePrimitive(Func<SExpression[], LispInterpreter.REPL.Environment, SExpression> f)
         {
             action = f;
         }
 
-        public SExpression Invoke(SExpression[] args)
+        public SExpression Invoke(SExpression[] args, LispInterpreter.REPL.Environment env)
         {
-            return action(args);
+            return action(args, env);
 
         }
     }

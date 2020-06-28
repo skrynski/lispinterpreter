@@ -16,7 +16,7 @@ namespace LispInterpreter.REPL
 
         private SExpression CreateCAR()
         {
-            return new PluggablePrimitive((args) =>
+            return new PluggablePrimitive((args, env) =>
             {
                 if (args[0] is SExpressionPair)
                 {
@@ -29,7 +29,7 @@ namespace LispInterpreter.REPL
 
         private SExpression CreateCDR()
         {
-            return new PluggablePrimitive((args) =>
+            return new PluggablePrimitive((args,env) =>
             {
                 if (args[0] is SExpressionPair)
                 {
@@ -41,7 +41,7 @@ namespace LispInterpreter.REPL
         }
         private SExpression CreateCONS()
         {
-            return new PluggablePrimitive((args) =>
+            return new PluggablePrimitive((args, env) =>
             {
                 return new SExpressionPair(args[0], args[1]);
             });
@@ -49,7 +49,7 @@ namespace LispInterpreter.REPL
 
         private SExpression CreatePlus()
         {
-            return new PluggablePrimitive((args) =>
+            return new PluggablePrimitive((args,env) =>
             {
                 return new SExpressionSymbol(
                     (
@@ -58,6 +58,16 @@ namespace LispInterpreter.REPL
                     ).ToString()) ;
             });
         }
+
+        //private SExpression CreateSetF()
+        //{
+        //    return new PluggablePrimitive((args, env) =>
+        //    {
+        //        env.Define(args[0].ToString(), args[1]);
+        //        return args[1];
+                
+        //    });
+        //}
 
 
         public void Start()
@@ -92,7 +102,7 @@ namespace LispInterpreter.REPL
             globalEnvironment.Define("CONS", CreateCONS());
             globalEnvironment.Define("+", CreatePlus());
             globalEnvironment.Define("ADD", CreatePlus());
-
+           
 
             globalEnvironment.Define("x", new SExpressionSymbol("34"));
             
@@ -106,6 +116,9 @@ namespace LispInterpreter.REPL
                 var line = Console.ReadLine();
 
                 var tokens = lexer.Execute(line);
+
+                if (tokens.Count == 0)
+                    continue;
 
                 var parser = new LispParser();
                 var expression = parser.Parse(tokens);

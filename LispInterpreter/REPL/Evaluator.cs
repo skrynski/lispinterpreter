@@ -43,6 +43,20 @@ namespace LispInterpreter.REPL
                         env
                     });
                 }
+                else if (pair.CAR.ToString() == "SETF")
+                {
+                   
+                    var args = pair.CDR;
+
+                    var argsAsList = args.ToList();
+                    var value = Eval(argsAsList[1], env);
+
+                    env.Define(((SExpressionSymbol) argsAsList[0]).ToString(), value);
+
+                    return value;
+
+
+                }
                 else
                 {
                     var func = Eval(pair.CAR, env);
@@ -51,7 +65,7 @@ namespace LispInterpreter.REPL
                     var argsAsList = args.ToList();
                     var evaluatedArgsAsList = argsAsList.Select(x => Eval(x, env)).ToList();
                     
-                    return Apply(func, evaluatedArgsAsList);
+                    return Apply(func, evaluatedArgsAsList, env);
 
 
                 }
@@ -62,12 +76,14 @@ namespace LispInterpreter.REPL
             throw new Exception("Eval: Invalid expression");
         }
 
-        private SExpression Apply(SExpression func, IList<SExpression> evaluatedArgsAsList)
+        private SExpression Apply(SExpression func, IList<SExpression> evaluatedArgsAsList, Environment env)
         {
             if (func is IPrimitive)
             {
+                var frameEnv = new Environment();
+                frameEnv.Parent = env;
                 var prim = (IPrimitive)func;
-                return prim.Invoke(evaluatedArgsAsList.ToArray());
+                return prim.Invoke(evaluatedArgsAsList.ToArray(), frameEnv);
             }
             else
             {
