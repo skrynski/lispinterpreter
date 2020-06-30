@@ -39,6 +39,16 @@ namespace LispInterpreter
 
         }
 
+        public virtual bool IsTrue()
+        {
+            return true;
 
+        }
+
+        public virtual bool IsFalse()
+        {
+            return !IsTrue();
+
+        }
     }
 }

@@ -10,5 +10,11 @@
     <Folder Include="REPL\" />
     <Folder Include="Lexer\" />
     <Folder Include="Parser\" />
+    <Folder Include="REPL\lisp-modules\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="REPL\lisp-modules\BaseModule.lisp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

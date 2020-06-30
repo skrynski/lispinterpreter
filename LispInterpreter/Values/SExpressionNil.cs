@@ -13,5 +13,11 @@ namespace LispInterpreter
         {
             return "()";
         }
+
+        public override bool IsTrue()
+        {
+            return false;
+
+        }
     }
 }

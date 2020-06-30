@@ -8,7 +8,10 @@ namespace LispInterpreter.REPL
     {
         public Evaluator()
         {
+          
         }
+
+        
 
         public SExpression Eval(SExpression expression, Environment env)
         {
@@ -65,11 +68,19 @@ namespace LispInterpreter.REPL
                 {
                     var func = Eval(pair.CAR, env);
                     var args = pair.CDR;
-
                     var argsAsList = args.ToList();
-                    var evaluatedArgsAsList = argsAsList.Select(x => Eval(x, env)).ToList();
 
-                    return Apply(func, evaluatedArgsAsList, env);
+                    if (func is IPrimitive && ((IPrimitive)func).EvaluatedArguments)
+                    {
+                        var prim = (IPrimitive)func;
+                        var res= prim.Invoke(argsAsList.ToArray(), this, env);
+                        return res;
+                    }
+                    else
+                    {
+                        var evaluatedArgsAsList = argsAsList.Select(x => Eval(x, env)).ToList();
+                        return Apply(func, evaluatedArgsAsList, env);
+                    }
 
 
                 }
@@ -87,7 +98,7 @@ namespace LispInterpreter.REPL
                 var frameEnv = new Environment();
                 frameEnv.Parent = env;
                 var prim = (IPrimitive)func;
-                return prim.Invoke(evaluatedArgsAsList.ToArray(), frameEnv);
+                return prim.Invoke(evaluatedArgsAsList.ToArray(), this, frameEnv);
             }
             else
             {
@@ -112,5 +123,8 @@ namespace LispInterpreter.REPL
 
             }
         }
+
+      
+
     }
 }

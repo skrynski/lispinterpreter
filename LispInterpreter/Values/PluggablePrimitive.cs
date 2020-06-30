@@ -1,18 +1,26 @@
 ﻿using System;
+using LispInterpreter.REPL;
+
 namespace LispInterpreter
 {
     public class PluggablePrimitive : SExpression,  IPrimitive
     {
-        Func<SExpression[], LispInterpreter.REPL.Environment, SExpression> action;
+        Func<SExpression[], Evaluator, REPL.Environment, SExpression> action;
 
-        public PluggablePrimitive(Func<SExpression[], LispInterpreter.REPL.Environment, SExpression> f)
+        public PluggablePrimitive(Func<SExpression[], Evaluator, REPL.Environment, SExpression> f, bool evaluatedArguments)
         {
             action = f;
+            this.evaluatedArguments = evaluatedArguments;
         }
 
-        public SExpression Invoke(SExpression[] args, LispInterpreter.REPL.Environment env)
+        public bool evaluatedArguments;
+        public virtual bool EvaluatedArguments { get { return evaluatedArguments; } }
+
+
+
+        public SExpression Invoke(SExpression[] args, Evaluator evaluator, REPL.Environment env)
         {
-            return action(args, env);
+            return action(args, evaluator, env);
 
         }
     }
