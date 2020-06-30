@@ -5,8 +5,14 @@ namespace LispInterpreter
 {
     public abstract class SExpression 
     {
-        static Lazy<SExpressionNil> val = new Lazy<SExpressionNil>(() => new SExpressionNil());
-        public static SExpression NIL { get { return val.Value; } }
+        static Lazy<SExpressionNil> nilV = new Lazy<SExpressionNil>(() => new SExpressionNil());
+        static Lazy<SExpression> trueV = new Lazy<SExpression>(() => new SExpressionSymbol("t"));
+       
+
+        public static SExpression True { get { return trueV.Value; } }
+        public static SExpression NIL { get { return nilV.Value; } }
+
+        public static SExpression False { get { return NIL; } }
 
         public static SExpression CreateLambda(SExpression args, SExpression body)
         {
@@ -50,5 +56,12 @@ namespace LispInterpreter
             return !IsTrue();
 
         }
+
+        public static SExpression Bool(bool v)
+        {
+            return v ? SExpression.True : SExpression.False;
+        }
+
+        public virtual bool IsList { get { return false; } }
     }
 }

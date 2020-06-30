@@ -34,11 +34,8 @@ namespace LispInterpreter.REPL
             else if (expression is SExpressionPair)
             {
                 var pair = (SExpressionPair)expression;
-                if (pair.CAR.ToString() == "QUOTE")
-                {
-                    return ((SExpressionPair)pair.CDR).CAR;
-                }
-                else if (pair.CAR.ToString() == "LAMBDA")
+               
+                if (pair.CAR.ToString() == "LAMBDA")
                 {
                     var args = pair.At(1);
                     var body = pair.At(2);
@@ -70,7 +67,7 @@ namespace LispInterpreter.REPL
                     var args = pair.CDR;
                     var argsAsList = args.ToList();
 
-                    if (func is IPrimitive && ((IPrimitive)func).EvaluatedArguments)
+                    if (func is IPrimitive && !((IPrimitive)func).EvaluatedArguments)
                     {
                         var prim = (IPrimitive)func;
                         var res= prim.Invoke(argsAsList.ToArray(), this, env);

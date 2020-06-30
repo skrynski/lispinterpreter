@@ -25,7 +25,7 @@ namespace LispInterpreter.REPL
                 }
                 throw new Exception("CAR error");
 
-            }, false);
+            }, true);
         }
 
         private SExpression CreateCDR()
@@ -38,14 +38,14 @@ namespace LispInterpreter.REPL
                 }
                 throw new Exception("CDR error");
 
-            }, false);
+            }, true);
         }
         private SExpression CreateCONS()
         {
             return new PluggablePrimitive((args, eval, env) =>
             {
                 return new SExpressionPair(args[0], args[1]);
-            }, false);
+            }, true);
         }
 
         private SExpression CreatePlus()
@@ -57,7 +57,7 @@ namespace LispInterpreter.REPL
                         int.Parse(args[0].ToString()) +
                         int.Parse(args[1].ToString())
                     ).ToString()) ;
-            }, false);
+            }, true);
         }
 
         private SExpression CreateList()
@@ -66,7 +66,7 @@ namespace LispInterpreter.REPL
             {
                 return SExpressionPair.List(args);
 
-            }, false);
+            }, true);
         }
 
         private SExpression CreatePrint()
@@ -77,12 +77,55 @@ namespace LispInterpreter.REPL
                 return SExpression.NIL;
                 //throw new Exception("s");
 
-            }, false);
+            }, true);
+        }
+
+        private SExpression CreateEval()
+        {
+            return new PluggablePrimitive((args, eval, env) =>
+            {
+                return eval.Eval(args[0], env);      
+
+            }, true);
+        }
+
+
+
+        private SExpression CreateEQ()
+        {
+            return new PluggablePrimitive((args, eval, env) =>
+            {
+                if (args[0] is SExpressionSymbol && args[1] is SExpressionSymbol)
+                    return SExpression.Bool(((SExpressionSymbol)args[0]).Value == ((SExpressionSymbol)args[1]).Value);
+                else if (args[0] is SExpressionString && args[1] is SExpressionString)
+                    return SExpression.Bool(((SExpressionString)args[0]).Value == ((SExpressionString)args[1]).Value);
+
+                return SExpression.False;
+            }, true);
+
+
+        }
+
+
+        private SExpression CreateIsSymbol()
+        {
+            return new PluggablePrimitive((args, eval, env) =>
+            {
+                return SExpression.Bool(args[0] is SExpressionSymbol);
+            }, true);
+        }
+
+        private SExpression CreateIsString()
+        {
+            return new PluggablePrimitive((args, eval, env) =>
+            {
+                return SExpression.Bool(args[0] is SExpressionString);
+            }, true);
         }
 
         private SExpression CreateIf()
         {
-            var pr = new PluggablePrimitive((args, eval, env) =>
+            return new PluggablePrimitive((args, eval, env) =>
             {
                 if (args[0].IsTrue())
                     return eval.Eval(args[1], env);
@@ -94,11 +137,24 @@ namespace LispInterpreter.REPL
                 }
 
                 return SExpression.NIL;
-            }, true);
+            }, false);
           
-            return pr;
+            
         }
 
+
+     
+
+        private SExpression CreateQuote2()
+        {
+            return new PluggablePrimitive((args, eval, env) =>
+            {
+                return args[0];
+
+            }, false);
+
+  
+        }
 
         public void Start()
         {
@@ -123,6 +179,11 @@ namespace LispInterpreter.REPL
             globalEnvironment.Define("LIST", CreateList());
             globalEnvironment.Define("PRINT", CreatePrint());
             globalEnvironment.Define("IF", CreateIf());
+            globalEnvironment.Define("EQ", CreateEQ());
+            globalEnvironment.Define("QUOTE", CreateQuote2());
+            globalEnvironment.Define("ISSYMBOL", CreateIsSymbol());
+            globalEnvironment.Define("ISSTRING", CreateIsString());
+            globalEnvironment.Define("EVAL", CreateEval());
 
             // (IF 1 (ADD 2 3) 3)
             // (IF () (ADD 2 3) 3)

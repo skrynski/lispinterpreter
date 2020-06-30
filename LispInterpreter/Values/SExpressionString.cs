@@ -10,6 +10,8 @@ namespace LispInterpreter
             value = s;
         }
 
+        public string Value { get { return value; } }
+
         public override string ToString()
         {
             return "\"" + value + "\"";

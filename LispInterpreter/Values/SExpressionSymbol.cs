@@ -11,6 +11,8 @@ namespace LispInterpreter
             stringRepresentation = fromString;
         }
 
+        public string Value { get { return stringRepresentation; } }
+
         public bool IsNumber
         {
             get

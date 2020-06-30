@@ -19,5 +19,7 @@ namespace LispInterpreter
             return false;
 
         }
+
+        public override bool IsList { get { return true; } }
     }
 }

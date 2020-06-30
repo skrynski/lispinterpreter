@@ -31,9 +31,15 @@ namespace LispInterpreter
 
         public override bool IsPair { get { return true; } }
 
+        public override bool IsList { get { return CDR.IsList; } }
+
         public override string ToString()
         {
-            return "(" + CAR.ToString() + " . " + CDR.ToString() + ")";
+            if (!IsList)
+                return "(" + CAR.ToString() + " . " + CDR.ToString() + ")";
+            else
+                return "(" + string.Join(" ",  ToList().Select(x => x.ToString())) + ")";
+
         }
 
         public override SExpression At(int index)
