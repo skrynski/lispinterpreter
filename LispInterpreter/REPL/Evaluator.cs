@@ -27,39 +27,22 @@ namespace LispInterpreter.REPL
                 else
                     return env.Lookup(symbol.ToString());
             }
-            else if (expression is SExpressionNil)
-            {
-                return expression;
-            }
+         
             else if (expression is SExpressionPair)
             {
                 var pair = (SExpressionPair)expression;
                
-                if (pair.CAR.ToString() == "LAMBDA")
+                if (pair.CAR.ToString() == "lambda")
                 {
                     var args = pair.At(1);
                     var body = pair.At(2);
 
                     return SExpressionPair.List(new SExpression[] {
-                        new SExpressionSymbol("CLOSURE"),
+                        new SExpressionSymbol("closure"),
                         args,
                         body,
                         env
                     });
-                }
-                else if (pair.CAR.ToString() == "SETF")
-                {
-
-                    var args = pair.CDR;
-
-                    var argsAsList = args.ToList();
-                    var value = Eval(argsAsList[1], env);
-
-                    env.Define(((SExpressionSymbol)argsAsList[0]).ToString(), value);
-
-                    return value;
-
-
                 }
                 else
                 {
@@ -101,7 +84,7 @@ namespace LispInterpreter.REPL
             {
                 //var pair = (SExpressionPair)func;
                 var closureSymbol = func.At(0);
-                if (closureSymbol.ToString() != "CLOSURE")
+                if (closureSymbol.ToString() != "closure")
                     throw new Exception("Apply: Invalid CLOSURE to evaluate");
                 var args = func.At(1);
                 var body = func.At(2);

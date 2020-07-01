@@ -143,9 +143,24 @@ namespace LispInterpreter.REPL
         }
 
 
-     
+        private SExpression CreateDefine()
+        {
+            return new PluggablePrimitive((args, eval, env) =>
+            {
+                if (!(args[0] is SExpressionSymbol))
+                    throw new Exception("define expects symbol");
+                var value = eval.Eval(args[1], env);
+                env.Define(((SExpressionSymbol)args[0]).Value, value);
+                return value;
 
-        private SExpression CreateQuote2()
+            }, false);
+
+
+        }
+
+
+
+        private SExpression CreateQuote()
         {
             return new PluggablePrimitive((args, eval, env) =>
             {
@@ -163,7 +178,7 @@ namespace LispInterpreter.REPL
             lexer.AddRule(new LexerRule(@"[(]", "OPEN_PARENS"));
             lexer.AddRule(new LexerRule(@"[)]", "CLOSE_PARENS"));
             lexer.AddRule(new LexerRule(@"[0-9]+", "NUMBER"));
-            lexer.AddRule(new LexerRule(@"[a-zA-Z][0-9a-zA-Z]*", "SYMBOL"));
+            lexer.AddRule(new LexerRule(@"[a-zA-Z][0-9a-zA-Z\?]*", "SYMBOL"));
             lexer.AddRule(new LexerRule("\"([^\"]*)\"", "STRING", c => c == '\"'));
 
 
@@ -171,19 +186,20 @@ namespace LispInterpreter.REPL
 
 
             var globalEnvironment  = new Environment();
-            globalEnvironment.Define("CAR", CreateCAR());
-            globalEnvironment.Define("CDR", CreateCDR());
-            globalEnvironment.Define("CONS", CreateCONS());
+            globalEnvironment.Define("car", CreateCAR());
+            globalEnvironment.Define("cdr", CreateCDR());
+            globalEnvironment.Define("cons", CreateCONS());
             globalEnvironment.Define("+", CreatePlus());
-            globalEnvironment.Define("ADD", CreatePlus());
-            globalEnvironment.Define("LIST", CreateList());
-            globalEnvironment.Define("PRINT", CreatePrint());
-            globalEnvironment.Define("IF", CreateIf());
-            globalEnvironment.Define("EQ", CreateEQ());
-            globalEnvironment.Define("QUOTE", CreateQuote2());
-            globalEnvironment.Define("ISSYMBOL", CreateIsSymbol());
-            globalEnvironment.Define("ISSTRING", CreateIsString());
-            globalEnvironment.Define("EVAL", CreateEval());
+            globalEnvironment.Define("add", CreatePlus());
+            globalEnvironment.Define("list", CreateList());
+            globalEnvironment.Define("print", CreatePrint());
+            globalEnvironment.Define("if", CreateIf());
+            globalEnvironment.Define("eq", CreateEQ());
+            globalEnvironment.Define("quote", CreateQuote());
+            globalEnvironment.Define("issymbol?", CreateIsSymbol());
+            globalEnvironment.Define("isstring?", CreateIsString());
+            globalEnvironment.Define("eval", CreateEval());
+            globalEnvironment.Define("define", CreateDefine());
 
             // (IF 1 (ADD 2 3) 3)
             // (IF () (ADD 2 3) 3)

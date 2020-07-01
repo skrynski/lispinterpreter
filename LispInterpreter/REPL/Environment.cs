@@ -22,7 +22,7 @@ namespace LispInterpreter.REPL
             if (Parent != null)
                 return Parent.Lookup(symbol);
 
-            throw new Exception("Env: symbol not found");
+            throw new Exception($"Env: Symbol '{symbol}' not found");
         }
 
 

@@ -1,3 +1,3 @@
-﻿(SETF SUMA ADD)
+﻿(define suma add)
 
 
