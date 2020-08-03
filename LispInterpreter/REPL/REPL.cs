@@ -127,7 +127,7 @@ namespace LispInterpreter.REPL
         {
             return new PluggablePrimitive((args, eval, env) =>
             {
-                if (args[0].IsTrue())
+                if (eval.Eval(args[0], env).IsTrue())
                     return eval.Eval(args[1], env);
                 else
                 {
@@ -171,6 +171,22 @@ namespace LispInterpreter.REPL
   
         }
 
+        private SExpression CreateBegin()
+        {
+            return new PluggablePrimitive((args, eval, env) =>
+            {
+
+                foreach (var x in args)
+                    eval.Eval(x, env);
+
+                return SExpression.NIL;
+
+            }, false);
+
+
+        }
+
+
         public void Start()
         {
             var lexer = new Lexer.Lexer();
@@ -190,6 +206,7 @@ namespace LispInterpreter.REPL
             globalEnvironment.Define("cdr", CreateCDR());
             globalEnvironment.Define("cons", CreateCONS());
             globalEnvironment.Define("+", CreatePlus());
+       
             globalEnvironment.Define("add", CreatePlus());
             globalEnvironment.Define("list", CreateList());
             globalEnvironment.Define("print", CreatePrint());
@@ -200,6 +217,7 @@ namespace LispInterpreter.REPL
             globalEnvironment.Define("isstring?", CreateIsString());
             globalEnvironment.Define("eval", CreateEval());
             globalEnvironment.Define("define", CreateDefine());
+            globalEnvironment.Define("begin", CreateBegin());
 
             // (IF 1 (ADD 2 3) 3)
             // (IF () (ADD 2 3) 3)
