@@ -90,6 +90,8 @@ namespace LispInterpreter.REPL
         }
 
 
+       
+
 
         private SExpression CreateEQ()
         {
@@ -194,7 +196,9 @@ namespace LispInterpreter.REPL
             lexer.AddRule(new LexerRule(@"[(]", "OPEN_PARENS"));
             lexer.AddRule(new LexerRule(@"[)]", "CLOSE_PARENS"));
             lexer.AddRule(new LexerRule(@"[0-9]+", "NUMBER"));
-            lexer.AddRule(new LexerRule(@"[a-zA-Z][0-9a-zA-Z\?]*", "SYMBOL"));
+
+            var symbRegex = @"\+|\-|\*|\/";
+            lexer.AddRule(new LexerRule(symbRegex + "|" + @"[a-zA-Z][0-9a-zA-Z\?]*", "SYMBOL"));
             lexer.AddRule(new LexerRule("\"([^\"]*)\"", "STRING", c => c == '\"'));
 
 
@@ -238,23 +242,24 @@ namespace LispInterpreter.REPL
 
             }
 
-
+            Console.WriteLine("SK-LISP!");
 
             while (true)
             {
                 try {
 
-                var line = Console.ReadLine();
+                    Console.Write("> "); 
+                    var line = Console.ReadLine();
 
-                var tokens = lexer.Execute(line);
+                    var tokens = lexer.Execute(line);
 
-                if (tokens.Count == 0)
-                    continue;
+                    if (tokens.Count == 0)
+                        continue;
 
                
-                var expression = parser.Parse(tokens);
-                var result = evaluator.Eval(expression, globalEnvironment);
-                Console.WriteLine(result.ToString());
+                    var expression = parser.Parse(tokens);
+                    var result = evaluator.Eval(expression, globalEnvironment);
+                    Console.WriteLine(result.ToString());
 
 
                 }
