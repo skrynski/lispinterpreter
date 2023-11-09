@@ -23,5 +23,11 @@ namespace LispInterpreter
             return action(args, evaluator, env);
 
         }
+
+        public override void Accept(SExpressionVisitor visitor)
+        {
+            visitor.VisitPluggablePrimitive(this);
+        }
+
     }
 }

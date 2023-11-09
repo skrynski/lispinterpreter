@@ -31,6 +31,9 @@ namespace LispInterpreter.REPL
            dict[symbol] = value;
         }
 
-
+        public override void Accept(SExpressionVisitor visitor)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -6,8 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Values\" />
-    <Folder Include="REPL\" />
     <Folder Include="Lexer\" />
     <Folder Include="Parser\" />
     <Folder Include="REPL\lisp-modules\" />

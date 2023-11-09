@@ -21,5 +21,11 @@ namespace LispInterpreter
 
 
         }
+
+        public override void Accept(SExpressionVisitor visitor)
+        {
+            visitor.VisitAtom(this);
+        }
+
     }
 }

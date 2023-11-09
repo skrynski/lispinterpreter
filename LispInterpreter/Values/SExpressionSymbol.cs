@@ -32,5 +32,11 @@ namespace LispInterpreter
         {
             return stringRepresentation;
         }
+
+        public override void Accept(SExpressionVisitor visitor)
+        {
+            visitor.VisitSymbol(this);
+        }
+
     }
 }

@@ -16,7 +16,11 @@ namespace LispInterpreter
 
         }
 
-        
+        public override void Accept(SExpressionVisitor visitor)
+        {
+            visitor.VisitPair(this);
+        }
+
 
 
         public SExpression CAR { get; private set; }

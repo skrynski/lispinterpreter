@@ -16,5 +16,11 @@ namespace LispInterpreter
         {
             return "\"" + value + "\"";
         }
+
+        public override void Accept(SExpressionVisitor visitor)
+        {
+            visitor.VisitString(this);
+        }
+
     }
 }

@@ -9,6 +9,13 @@ namespace LispInterpreter
         {
         }
 
+
+        public override void Accept(SExpressionVisitor visitor)
+        {
+            visitor.VisitNil(this);
+        }
+
+
         public override string ToString()
         {
             return "()";

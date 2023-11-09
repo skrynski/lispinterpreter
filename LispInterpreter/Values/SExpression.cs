@@ -26,6 +26,8 @@ namespace LispInterpreter
         }
 
 
+        public abstract void Accept(SExpressionVisitor visitor);
+
         public virtual SExpression At(int index)
         {
             throw new NotImplementedException();

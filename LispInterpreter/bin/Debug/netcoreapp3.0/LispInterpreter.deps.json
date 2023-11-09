@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.0": {
+      "LispInterpreter/1.0.0": {
+        "runtime": {
+          "LispInterpreter.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "LispInterpreter/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,9 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\LispInterpreter",
-    "\\LispInterpreter\\REPL"
+    ""
   ],
-  "SelectedNode": "\\LispInterpreter\\Program.cs",
+  "SelectedNode": "\\LispInterpreter.sln",
   "PreviewInSolutionExplorer": false
 }
