@@ -6,13 +6,15 @@ namespace LispInterpreter.REPL
 {
     public class EvaluatorVisitor : SExpressionVisitor
     {
+        Evaluator evaluator;
         SExpression result = null;
         SExpression expression;
         Environment env;
-        public EvaluatorVisitor(SExpression expression, Environment env)
+        public EvaluatorVisitor(Evaluator evaluator, SExpression expression, Environment env)
         {
             this.expression = expression;
             this.env = env;
+            this.evaluator = evaluator;
           
         }
 
@@ -59,19 +61,19 @@ namespace LispInterpreter.REPL
             }
             else
             {
-                var func = new EvaluatorVisitor(pair.CAR, env).Eval();
+                var func = evaluator.Eval(pair.CAR, env);
                 var args = pair.CDR;
                 var argsAsList = args.ToList();
 
                 if (func is IPrimitive && !((IPrimitive)func).EvaluatedArguments)
                 {
                     var prim = (IPrimitive)func;
-                    var res = prim.Invoke(argsAsList.ToArray(), new Evaluator(), env);
+                    var res = prim.Invoke(argsAsList.ToArray(), evaluator, env);
                     result = res;
                 }
                 else
                 {
-                    var evaluatedArgsAsList = argsAsList.Select(x => new EvaluatorVisitor(x, env).Eval()).ToList();
+                    var evaluatedArgsAsList = argsAsList.Select(x => evaluator.Eval(x, env)).ToList();
                     result = Apply(func, evaluatedArgsAsList, env);
                 }
 
@@ -99,14 +101,14 @@ namespace LispInterpreter.REPL
             throw new NotImplementedException();
         }
 
-        private static SExpression Apply(SExpression func, IList<SExpression> evaluatedArgsAsList, Environment env)
+        private SExpression Apply(SExpression func, IList<SExpression> evaluatedArgsAsList, Environment env)
         {
             if (func is IPrimitive)
             {
                 var frameEnv = new Environment();
                 frameEnv.Parent = env;
                 var prim = (IPrimitive)func;
-                return prim.Invoke(evaluatedArgsAsList.ToArray(), new Evaluator(), frameEnv);
+                return prim.Invoke(evaluatedArgsAsList.ToArray(), evaluator, frameEnv);
             }
             else
             {
@@ -127,7 +129,7 @@ namespace LispInterpreter.REPL
                     frameEnv.Define(x.First.ToString(), x.Second);
                 }
 
-                return new EvaluatorVisitor(body, frameEnv).Eval();
+                return  evaluator.Eval(body, frameEnv);
 
             }
         }

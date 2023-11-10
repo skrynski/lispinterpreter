@@ -12,7 +12,7 @@ namespace LispInterpreter.REPL
 
         public SExpression Eval(SExpression expression, Environment env)
         {
-            return new EvaluatorVisitor(expression, env).Eval();
+            return new EvaluatorVisitor(this, expression, env).Eval();
         }
 
     }
